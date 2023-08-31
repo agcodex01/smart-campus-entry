@@ -4,12 +4,15 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
+from . import auth
+
 from flaskr.db import get_db
 
 bp = Blueprint('entries', __name__, url_prefix='/entries')
 
 
 @bp.route('', methods=('GET', 'POST'))
+@auth.login_required
 def index():
     
     db = get_db()

@@ -11,18 +11,20 @@
 
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <h2 class="ml-1 text-white" href="#">EVSU APP</h2>
+        <h2 class="ml-1 text-white" href="#">SCE-RETIFARS</h2>
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link ml-4 pb-1" href="{{ url_for('users.index') }}">Dashboard <span class="sr-only">(current)</span></a>
+                    <a class="nav-link ml-4 pb-1" href="{{ url_for('users.index') }}">Dashboard <span
+                            class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link ml-4 pb-1" href="{{ url_for('entries.index') }}">Logs <span class="sr-only">(current)</span></a>
+                    <a class="nav-link ml-4 pb-1" href="{{ url_for('entries.index') }}">Logs <span
+                            class="sr-only">(current)</span></a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
+            <form class="form-inline my-2 my-lg-0" action="{{ url_for('auth.logout')}}">
                 <button class="btn btn-outline-info my-2 my-sm-0" type="flat">
                     Logout
                 </button>
@@ -36,12 +38,12 @@
                 Create User
             </div>
             <div class="card-body">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
-                    <small id="usernameHelp" class="form-text text-muted">This will use to identify the person in
-                        image</small>
+                {% for message in get_flashed_messages() %}
+
+                <div class="alert alert-danger">
+                    {{ message }}
                 </div>
+                {% endfor %}
                 <div class="form-group">
                     <label for="firstname">First name</label>
                     <input type="text" class="form-control" id="firstname" name="first_name"
@@ -50,13 +52,30 @@
                 </div>
                 <div class="form-group">
                     <label for="last_name">Last name</label>
-                    <input type="text" class="form-control" id="last_name" name="last_name"
-                        placeholder="Enter lastname" required>
+                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter lastname"
+                        required>
 
                 </div>
                 <div class="form-group">
+                    <label for="student_id">Student ID</label>
+                    <input type="text" class="form-control" id="studentId" name="student_id"
+                        placeholder="Enter student Id" required>
+                    <small id="studentIdHelp" class="form-text text-muted">This will use to identify the person in
+                        image</small>
+                </div>
+                <div class="form-group">
                     <label for="course">Course</label>
-                    <input type="text" class="form-control" id="course" name="course" placeholder="Enter course" required>
+                    <input type="text" class="form-control" id="course" name="course" placeholder="Enter course"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="year_level">Year Level</label>
+                    <select name="year_level" id="year_level" class="form-control" required>
+                        <option value="I">I</option>
+                        <option value="II">II</option>
+                        <option value="III">III</option>
+                        <option value="IV">IV</option>
+                    </select>
                 </div>
             </div>
             <div class="card-footer">
