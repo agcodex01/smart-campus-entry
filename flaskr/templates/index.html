@@ -34,7 +34,7 @@
             </div>
 
             <div class="col-md-6">
-                <video autoplay="true" id="videoElement" class="w-100"></video>
+                <img src="{{ url_for('home.video_detection')}}"/>
                 <div class="d-flex">
                     {% for user in users%}
                     <form action="{{ url_for('entries.index')}}"  method="post" >
@@ -70,29 +70,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
         crossorigin="anonymous"></script>
-
-    <script>
-        var video = document.querySelector("#videoElement");
-
-        if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices
-                .getUserMedia({ video: true })
-                .then(function (stream) {
-                    video.srcObject = stream;
-                })
-                .catch(function (err0r) {
-                    console.log("Something went wrong!");
-                });
-        }
-        setInterval(() => {
-            var date = new Date();
-            var current_date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-            var current_time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-            var date_time = current_date + " " + current_time;
-            document.getElementById("datetime").innerHTML = date_time;
-        }, 1000)
-
-    </script>
 </body>
 
 </html>

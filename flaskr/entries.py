@@ -12,9 +12,7 @@ bp = Blueprint('entries', __name__, url_prefix='/entries')
 
 
 @bp.route('', methods=('GET', 'POST'))
-@auth.login_required
 def index():
-    
     db = get_db()
     if (request.method == 'POST'):
         user_id = request.form['user_id']
