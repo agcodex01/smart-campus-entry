@@ -37,7 +37,7 @@ def generate_video_detection():
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
-    model=YOLO('yolov8n.pt')
+    model=YOLO('blode.pt')
     names = model.names
     print(names)
     while True:
@@ -85,7 +85,7 @@ def load_logged_in_user():
 def index():
     db = get_db()
     users = db.execute("SELECT * FROM users WHERE type='user'").fetchall()
-    entries = db.execute('SELECT e.id, created, u.first_name, u.last_name, u.course  FROM entries e JOIN users u ON e.user_id = u.id  ORDER BY created DESC LIMIT 4').fetchall()
+    entries = db.execute('SELECT e.id, created, u.first_name, u.last_name, u.course,  u.year_level, u.student_id   FROM entries e JOIN users u ON e.user_id = u.id  ORDER BY created DESC LIMIT 4').fetchall()
   
     return render_template('index.html', entries=entries, users=users)
 

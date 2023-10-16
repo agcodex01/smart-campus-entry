@@ -16,16 +16,18 @@
 <body>
     <div class="container-fluid">
         <div class="row mt-3">
-            <div class="col-md-6 custom">
+            <div class="col-md-3 custom">
                 <div class="row row-cols-1 row-cols-md-2">
                     {% for entry in entries%}
-                    <div class="col-md-6 ">
-                        <div class="card card-flyer">
-                            <img src="{{ url_for('static', filename='images/evsu.png') }}" alt="..." width="250" height="250"
-                                class="mx-auto mt-3 rounded" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">{{ entry['first_name'] }} {{ entry['last_name'] }}</h5>
-                                <p class="card-text">{{ entry['course']}}</p>
+                    <div class="col-md-6">
+                        <div class="card card-flyer p-2">
+                            <img src="{{ url_for('static', filename='images/evsu.png') }}" alt="..." width="100px"
+                                class="mx-auto rounded" />
+                            <div class="card-body px-0 py-1">
+                                <small class="card-title">{{ entry['first_name'] }} {{ entry['last_name'] }} <span class="badge badge-pill badge-info">
+                                    {{ entry['course']}} - {{ entry['year_level']}}
+                                  </span></small>
+                                <small class="">{{ entry['student_id']}}</small>
                             </div>
                         </div>
                     </div>
@@ -33,8 +35,8 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <img src="{{ url_for('home.video_detection')}}"/>
+            <div class="col-md-9">
+                <img width="100%" height="80%" src="{{ url_for('home.video_detection')}}"/>
                 <div class="d-flex">
                     {% for user in users%}
                     <form action="{{ url_for('entries.index')}}"  method="post" >
