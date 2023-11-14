@@ -10,6 +10,7 @@ CREATE TABLE users (
   last_name TEXT,
   course TEXT,
   year_level TEXT,
+  profile TEXT NULL,
   type TEXT NOT NULL DEFAULT 'user'
 );
 

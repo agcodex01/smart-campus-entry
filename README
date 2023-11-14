@@ -1,5 +1,9 @@
-Set terminal to vitrual env
 
+Initialized the database.
+```
+flask --app flaskr init-db
+```
+Set terminal to vitrual env
 ```
 .venv\Scripts\activate
 ```
