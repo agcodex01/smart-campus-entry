@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block navbaritems %}
+<li class="breadcrumb-item active" aria-current="page">Students</li>
+{% endblock %} {% block content %}
+<div class="d-flex justify-content-between align-items-center">
+  <h2>Students</h2>
+  <a class="btn btn-primary" href="{{ url_for('users.users_create') }}"
+    >Add Student <i class="fas fa-plus ml-2"></i>
+  </a>
+</div>
+
+<hr />
+<div class="row">
+  {% for user in users %}
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+    <div class="card rounded-0 p-0 shadow-sm mb-3">
+      <img
+        src="{{ url_for('static', filename='profiles/' + user['student_id'] + '.png') }}"
+        width="200px"
+        height="200px"
+        class="rounded-0 mx-auto mt-3"
+        alt="Angular pro sidebar"
+      />
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h6 class="card-title">
+              {{ user['first_name']}} {{ user['last_name']}}
+              <span class="badge badge-pill badge-info">
+                {{ user['course']}} - {{ user['year_level']}}
+              </span>
+            </h6>
+            <p>ID: {{ user['student_id']}}</p>
+          </div>
+
+          <div>
+           <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400" data-toggle="dropdown"></i>
+            <div class="dropdown-menu">
+              <a href="{{ url_for('users.edit', id=user.id)}}" class="dropdown-item">Edit</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+</div>
+{% endblock %}
+
+<!-- page-content" -->

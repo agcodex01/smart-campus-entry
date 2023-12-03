@@ -1,0 +1,114 @@
+{% extends 'base.html' %} {% block navbaritems %}
+<li class="breadcrumb-item">
+  <a href="{{ url_for('users.index')}}"> Students</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">Add Student</li>
+{% endblock %} {% block content %}
+<div class="d-flex justify-content-between align-items-center">
+  <h2>Add Student</h2>
+</div>
+<form class="container mt-3 px-0" method="post" enctype="multipart/form-data">
+  <div class="card border-1">
+    <div class="card-body">
+      {% for message in get_flashed_messages() %}
+
+      <div class="alert alert-danger">{{ message }}</div>
+      {% endfor %}
+      <div class="row">
+        <div class="col-md-7">
+          <div class="form-group">
+            <label for="firstname">First name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstname"
+              name="first_name"
+              placeholder="Enter firstname"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="last_name">Last name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="last_name"
+              name="last_name"
+              placeholder="Enter lastname"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="student_id">Student ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="studentId"
+              name="student_id"
+              placeholder="Enter student Id"
+              required
+            />
+            <small id="studentIdHelp" class="form-text text-muted"
+              >This will use to identify the person in image</small
+            >
+          </div>
+          <div class="form-group">
+            <label for="course">Course</label>
+            <input
+              type="text"
+              class="form-control"
+              id="course"
+              name="course"
+              placeholder="Enter course"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="year_level">Year Level</label>
+            <select
+              name="year_level"
+              id="year_level"
+              class="form-control"
+              required
+            >
+              <option value="I">I</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV">IV</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-5 text-center">
+          <img
+            id="image_preview"
+            src="https://placehold.co/300"
+            class="rounded"
+            alt="profile"
+            width="300"
+            height="300"
+          />
+          <input
+            type="file"
+            class="d-none"
+            name="file"
+            required
+            id="file_upload"
+            onchange="document.getElementById('image_preview').src = window.URL.createObjectURL(this.files[0]);"
+          />
+          <button
+            type="button"
+            onclick="document.getElementById('file_upload').click()"
+            class="btn btn-primary w-75 mt-3"
+          >
+            Upload Image
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

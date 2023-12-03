@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Responsive sidebar template with sliding effect and dropdown menu based on bootstrap 3"
+    />
+    <title>SCE-RETIFARS</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dataTables.min.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/fontawesome.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    
+  </head>
+
+  <body>
+    <div class="page-wrapper chiller-theme toggled">
+      <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+        <i class="fas fa-bars"></i>
+      </a>
+      <nav id="sidebar" class="sidebar-wrapper">
+        <div class="sidebar-content">
+          <div class="sidebar-brand">
+            <a href="#">SCE-RETIFARS</a>
+            <div id="close-sidebar">
+              <i class="fas fa-times"></i>
+            </div>
+          </div>
+          <div class="sidebar-header">
+            <div class="user-pic">
+              <img
+                class="img-responsive img-rounded"
+                src="{{ url_for('static', filename='images/evsu.png') }}"
+                alt="User picture"
+              />
+            </div>
+            <div class="user-info">
+              <span class="user-name"
+                >Admin
+                <strong>User</strong>
+              </span>
+              <span class="user-role">Administrator</span>
+              <span class="user-status">
+                <i class="fa fa-circle"></i>
+                <span>Online</span>
+              </span>
+            </div>
+          </div>
+          <!-- sidebar-header  -->
+
+          <!-- sidebar-search  -->
+          <div class="sidebar-menu">
+            <ul>
+              <li class="header-menu">
+                <span>General</span>
+              </li>
+              <li>
+                <a href="{{ url_for('landing.dashboard')}}">
+                  <i class="fa fa-book"></i>
+                  <span>Dashboard</span>
+                </a>
+              </li>
+              <li class="header-menu">
+                <span>Data Management</span>
+              </li>
+              <li>
+                <a href="{{ url_for('users.index') }}">
+                  <i class="fa fa-book"></i>
+                  <span>Students</span>
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('entries.index') }}">
+                  <i class="fa fa-calendar"></i>
+                  <span>Logs</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <!-- sidebar-menu  -->
+        </div>
+        <!-- sidebar-content  -->
+        <div class="sidebar-footer py-2">
+          <a href="{{ url_for('auth.logout')}}">
+            Logout
+            <i class="fa fa-power-off ml-3"></i>
+          </a>
+        </div>
+      </nav>
+      <!-- sidebar-wrapper  -->
+
+      <main class="page-content">
+        <div class="container-fluid">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-white h4 pl-0">
+              <li class="breadcrumb-item"><a href="">SCE-RETIFARS</a></li>
+              {% block navbaritems %}{% endblock %}
+            </ol>
+          </nav>
+          {% for message in get_flashed_messages() %}
+          <div class="flash">{{ message }}</div>
+          {% endfor %} {% block content %}{% endblock %}
+          <hr />
+
+          <footer class="text-center">
+            <div class="mb-2">
+              <small>
+                © 2023 made with
+                <i class="fa fa-heart" style="color: red"></i> by - SCE-RETIFARS
+              </small>
+            </div>
+          </footer>
+        </div>
+      </main>
+      <!-- page-content" -->
+    </div>
+    <!-- page-wrapper -->
+
+
+    <script src="{{ url_for('static', filename='js/jquery.slim.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTable.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}"></script>
+    {% block scripts %}{% endblock %}
+    <script>
+      new DataTable('#table');
+    </script>
+  </body>
+</html>

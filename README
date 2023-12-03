@@ -10,5 +10,5 @@ Set terminal to vitrual env
 
 Run the application
 ```
-flask --app flaskr run --debug
+flask  run --debug
 ```

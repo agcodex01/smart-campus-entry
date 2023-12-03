@@ -1,0 +1,9 @@
+click==8.1.6
+click==8.1.7
+Flask==3.0.0
+gTTS==2.3.2
+opencv_python==4.8.0.76
+playsound==1.2.2
+ultralytics==8.0.183
+Werkzeug==3.0.0
+SQLAlchemy=2.0.23
