@@ -21,6 +21,9 @@ app.register_blueprint(entries.bp)
 app.register_blueprint(auth.bp)
 app.register_blueprint(users.bp)
 
+with app.app_context():
+    db.create_all()
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template('404.html')
