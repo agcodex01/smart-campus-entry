@@ -6,9 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_mapping(
     SQLALCHEMY_DATABASE_URI='sqlite:///' +
-    os.path.join(app.instance_path, 'flaskr.sqlite'),
+    os.path.join(app.instance_path, 'db.sqlite'),
     SECRET_KEY='dev',
-    DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+    DATABASE=os.path.join(app.instance_path, 'db.sqlite'),
 )
 app.config['UPLOAD_FOLDER'] = '/profiles'
 socketio = SocketIO(app, cors_allowed_origins="*")
