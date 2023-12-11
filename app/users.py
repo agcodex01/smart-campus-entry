@@ -17,11 +17,13 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 @login_required
 def index():
     users = User.query.filter(
-        User.student_id != "00000-001" or
-        User.student_id != "00000-002" or
-        User.student_id != "00000-003"
-        
-    ).all()
+            User.student_id != '00000-001'
+        ).filter(
+            User.student_id != '00000-002'
+
+        ).filter(
+            User.student_id != '00000-003'
+        ).all()
 
     return render_template('users/users-index.html', users=users)
 
