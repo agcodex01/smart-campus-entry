@@ -30,26 +30,27 @@ def do_tts(class_id=""):
     if class_id in ['blonde', 'blondes', 'Improper Uniform']:
         diff = now - last_play
         if diff.total_seconds() > 5:
-            if 'blonde' in class_id:
-                user_id = User.query.filter(
-                    User.student_id == "00000-002").first().id
-            else:
-                user_id = User.query.filter(
-                    User.student_id == "00000-003").first().id
+            with app.app_context():
+                if 'blonde' in class_id:
+                    user_id = User.query.filter(
+                        User.student_id == "00000-002").first().id
+                else:
+                    user_id = User.query.filter(
+                        User.student_id == "00000-003").first().id
 
-            entry = Entry(
-                user_id=user_id,
-                created=now
-            )
-            db.session.add(entry)
-            db.session.commit()
+                entry = Entry(
+                    user_id=user_id,
+                    created=now
+                )
+                db.session.add(entry)
+                db.session.commit()
 
-            last_play = now
-            tts = gTTS(class_id + " detected", lang="en")
-            filename = 'detect-' + datetime.now().strftime('%H-%M-%S-%f') + "-class.mp3"
-            tts.save(filename)
-            playsound(filename)
-            os.remove(filename)
+                last_play = now
+                tts = gTTS(class_id + " detected", lang="en")
+                filename = 'detect-' + datetime.now().strftime('%H-%M-%S-%f') + "-class.mp3"
+                tts.save(filename)
+                playsound(filename)
+                os.remove(filename)
     else:
         with app.app_context():
             user_id = User.query.filter(
