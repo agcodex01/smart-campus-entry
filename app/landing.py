@@ -155,7 +155,8 @@ def dashboard():
     violations = 0
     for entry in entries.all():
         mapEntry = entry.to_dict()
-        if mapEntry.user.student_id == "00000-002" or mapEntry.user.student_id == "00000-003":
+        print(mapEntry)
+        if mapEntry.get('user').get('student_id') == "00000-002" or mapEntry.get('user').get('student_id') == "00000-003":
             violations += 1
         if map.get(mapEntry.get('time_hour')):
             map[mapEntry.get('time_hour')] += 1
