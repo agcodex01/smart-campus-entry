@@ -40,5 +40,7 @@ class Entry(db.Model):
         return {
             'id': self.id,
             'user': self.user.to_dict(),
-            'created': self.created.strftime('%m/%d/%Y, %H:%M:%S')
+            'created': self.created.strftime('%m/%d/%Y, %H:%M:%S'),
+            'time': self.created.strftime('%I:%M %p'),
+            'time_hour': self.created.strftime('%I %p'),
         }

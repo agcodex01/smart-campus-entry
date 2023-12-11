@@ -14,6 +14,7 @@
         <th>Lastname</th>
         <th>Course</th>
         <th>Time In</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +26,9 @@
         <td>{{ entry.user.last_name}}</td>
         <td>{{ entry.user.course}}</td>
         <td>{{ entry.created.strftime('%D %I:M %p') }}</td>
+        <td class="delete" data-id="{{entry.id}}">
+          <button type="button" class="btn btn-sm btn-danger">Delete</button>
+        </td>
       </tr>
 
       {% endfor%}

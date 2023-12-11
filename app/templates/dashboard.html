@@ -86,5 +86,8 @@
 </div>
 
 {% endblock %} {% block scripts %}
+<script>
+  var data = JSON.parse('{{ data | tojson }}');
+</script>
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

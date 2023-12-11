@@ -3,6 +3,24 @@
   '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
 
+var chartData = data.chart
+var timeKeys = [
+  '07 AM',
+  '08 AM',
+  '09 AM',
+  '10 AM',
+  '11 AM',
+  '12 NN',
+  '01 PM',
+  '02 PM',
+  '03 PM',
+  '04 PM',
+  '05 PM',
+  '06 PM',
+]
+
+var timeKeysData =  timeKeys.map(key => chartData[key] || 0)
+
 function number_format(number, decimals, dec_point, thousands_sep) {
   // *     example: number_format(1234.56, 2, ',', ' ');
   // *     return: '1 234,56'
@@ -33,20 +51,7 @@ var ctx = document.getElementById('myAreaChart');
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: [
-      '7am',
-      '8 am',
-      '9 am',
-      '10 am',
-      '11 am',
-      '12 nn',
-      '1 pm',
-      '2 pm',
-      '3 pm',
-      '4 pm',
-      '5 pm',
-      '6 pm',
-    ],
+    labels: timeKeys,
     datasets: [
       {
         label: 'Total',
@@ -61,10 +66,7 @@ var myLineChart = new Chart(ctx, {
         pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: [
-          30, 55, 40, 45, 10, 100, 20, 0, 0, 50,
-          12, 40,
-        ],
+        data: timeKeysData
       },
     ],
   },

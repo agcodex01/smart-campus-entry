@@ -36,7 +36,7 @@ def do_tts(class_id=""):
             os.remove(filename)
     else:
         with app.app_context():
-            stud_id = random.choice(['19104882', '1000293', '1022299344'])
+            stud_id = random.choice(['000000001'])
             user_id = User.query.filter(
                 User.student_id == stud_id).first().id
             user_entry = Entry.query.filter(
@@ -65,7 +65,7 @@ def generate_video_detection():
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
-    model = YOLO("best.pt")
+    model = YOLO("yolov8n.pt")
     names = model.names
     while True:
         success, img = cap.read()
@@ -131,8 +131,19 @@ def video_detection():
 
 @bp.route("dashboard", methods=["GET"])
 def dashboard():
+    entries = Entry.query.filter(func.DATE(Entry.created)  == date.today())
+    map = {}
+    for entry in entries.all():
+        mapEntry = entry.to_dict()
+        if map.get(mapEntry.get('time_hour')):
+            map[mapEntry.get('time_hour')] += 1
+        else:
+             map[mapEntry.get('time_hour')] = 1
+    print(map)
     data = {
         'students': User.query.count(),
-        'scan' : Entry.query.filter(func.DATE(Entry.created)  == date.today()).count()
+        'scan' : entries.count(),
+        'chart': map
     }
+    
     return render_template('dashboard.html', data=data)

@@ -142,7 +142,15 @@
     <script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}"></script>
     {% block scripts %}{% endblock %}
     <script>
-      new DataTable('#table');
+     var dataTable = new DataTable('#table');
+
+     $('.delete').on('click', function() {
+        fetch(`/entries/${$(this).data('id')}`, {
+          method: 'DELETE'
+        }).then(() => {
+          dataTable.row($(this)).remove().draw()
+        })
+     })
     </script>
   </body>
 </html>
