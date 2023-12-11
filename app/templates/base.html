@@ -26,7 +26,6 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-    
   </head>
 
   <body>
@@ -52,10 +51,9 @@
             </div>
             <div class="user-info">
               <span class="user-name"
-                >Admin
-                <strong>User</strong>
+                >{{ g.user.first_name }}
+                <strong>{{g.user.last_name}}</strong>
               </span>
-              <span class="user-role">Administrator</span>
               <span class="user-status">
                 <i class="fa fa-circle"></i>
                 <span>Online</span>
@@ -132,6 +130,38 @@
     </div>
     <!-- page-wrapper -->
 
+    <div class="modal fade" id="delete-user" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <form id="form-delete" method="POST">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete Student</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure you want to delete this student?.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-danger">Delete</button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <script src="{{ url_for('static', filename='js/jquery.slim.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
@@ -142,15 +172,22 @@
     <script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}"></script>
     {% block scripts %}{% endblock %}
     <script>
-     var dataTable = new DataTable('#table');
+      var dataTable = new DataTable('#table');
 
-     $('.delete').on('click', function() {
+      $('.delete').on('click', function () {
         fetch(`/entries/${$(this).data('id')}`, {
-          method: 'DELETE'
+          method: 'DELETE',
         }).then(() => {
-          dataTable.row($(this)).remove().draw()
-        })
-     })
+          dataTable.row($(this)).remove().draw();
+        });
+      });
+
+      $('.delete-user').on('click', function () {
+        $id = $(this).data('id');
+        $modal = $('#delete-user');
+        $('#form-delete').attr('action', `http://localhost:5000/users/${$id}`);
+        $modal.modal('show');
+      });
     </script>
   </body>
 </html>

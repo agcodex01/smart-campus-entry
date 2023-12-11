@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, redirect, g, render_template, request, session, url_for
+    Blueprint, redirect, g, render_template, request, session, url_for, flash
 )
 
 import os
@@ -7,6 +7,7 @@ import os
 from app import db
 from app.models import User
 from app.auth import login_required
+from sqlalchemy import any_
 
 bp = Blueprint('users', __name__, url_prefix='/users')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -15,10 +16,14 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 @bp.route('', methods=('GET', 'POST'))
 @login_required
 def index():
-    users = User.query.all()
+    users = User.query.filter(
+        User.student_id != "00000-001" or
+        User.student_id != "00000-002" or
+        User.student_id != "00000-003"
+        
+    ).all()
 
     return render_template('users/users-index.html', users=users)
-
 
 @bp.route('create', methods=['GET', 'POST'])
 @login_required
@@ -80,3 +85,15 @@ def edit(id):
         return redirect(url_for("users.index"))
 
     return render_template('users/user-edit.html', user=user)
+
+
+@bp.route('<id>', methods=['POST'])
+def delete(id):
+    entry = User.query.get_or_404(id)
+    try:
+        db.session.delete(entry)
+        db.session.commit()
+        return redirect(url_for("users.index"))
+    except:
+        flash("Something went wrong!")
+    return redirect(url_for("users.index"))

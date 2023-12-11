@@ -1,7 +1,7 @@
 
 Initialized the database.
 ```
-flask --app flaskr init-db
+py migrate.py
 ```
 Set terminal to vitrual env
 ```

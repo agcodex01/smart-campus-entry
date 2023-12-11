@@ -18,16 +18,32 @@ import random
 
 from app import db, app, socketio
 from app.models import User, Entry
+from app.auth import login_required
 
 bp = Blueprint('landing', __name__, url_prefix="/")
 last_play = datetime.now()
 
+
 def do_tts(class_id=""):
     global last_play
     now = datetime.now()
-    if class_id in ['blonde', 'blondes']:
+    if class_id in ['blonde', 'blondes', 'Improper Uniform']:
         diff = now - last_play
         if diff.total_seconds() > 5:
+            if 'blonde' in class_id:
+                user_id = User.query.filter(
+                    User.student_id == "00000-002").first().id
+            else:
+                user_id = User.query.filter(
+                    User.student_id == "00000-003").first().id
+
+            entry = Entry(
+                user_id=user_id,
+                created=now
+            )
+            db.session.add(entry)
+            db.session.commit()
+
             last_play = now
             tts = gTTS(class_id + " detected", lang="en")
             filename = 'detect-' + datetime.now().strftime('%H-%M-%S-%f') + "-class.mp3"
@@ -36,9 +52,8 @@ def do_tts(class_id=""):
             os.remove(filename)
     else:
         with app.app_context():
-            stud_id = random.choice(['000000001'])
             user_id = User.query.filter(
-                User.student_id == stud_id).first().id
+                User.student_id == class_id).first().id
             user_entry = Entry.query.filter(
                 Entry.user_id == user_id).order_by(desc(Entry.created)).first()
             if user_entry:
@@ -65,7 +80,7 @@ def generate_video_detection():
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
-    model = YOLO("yolov8n.pt")
+    model = YOLO("best.pt")
     names = model.names
     while True:
         success, img = cap.read()
@@ -117,7 +132,8 @@ def generate_video_detection():
 
 @bp.route("", methods=("GET", "POST"))
 def index():
-    entries = Entry.query.filter(func.DATE(Entry.created)  == date.today()).order_by(desc(Entry.created)).limit(6).all()
+    entries = Entry.query.filter(func.DATE(Entry.created) == date.today()).order_by(
+        desc(Entry.created)).limit(6).all()
     users = User.query.all()
 
     return render_template("index.html", entries=entries, users=users)
@@ -129,21 +145,35 @@ def video_detection():
         generate_video_detection(), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
 
+
 @bp.route("dashboard", methods=["GET"])
+@login_required
 def dashboard():
-    entries = Entry.query.filter(func.DATE(Entry.created)  == date.today())
+    entries = Entry.query.filter(func.DATE(Entry.created) == date.today())
     map = {}
+    violations = 0
     for entry in entries.all():
         mapEntry = entry.to_dict()
+        if mapEntry.user.student_id == "00000-002" or mapEntry.user.student_id == "00000-003":
+            violations += 1
         if map.get(mapEntry.get('time_hour')):
             map[mapEntry.get('time_hour')] += 1
         else:
-             map[mapEntry.get('time_hour')] = 1
-    print(map)
+            map[mapEntry.get('time_hour')] = 1
     data = {
-        'students': User.query.count(),
-        'scan' : entries.count(),
+        'students': User.query.filter(
+            User.student_id != '00000-001'
+        )
+        .filter(
+            User.student_id != '00000-002'
+
+        ).filter(
+            User.student_id != '00000-003'
+        )
+        .count(),
+        'scan': entries.count(),
+        'violations': violations,
         'chart': map
     }
-    
+
     return render_template('dashboard.html', data=data)
