@@ -3,37 +3,230 @@
 {% endblock %} {% block content %}
 <div class="d-flex justify-content-between align-items-center">
   <h2>Logs</h2>
+  <form action="{{ url_for('entries.export')}}" method="POST">
+    <button
+      type="button"
+      id="batch-delete-btn"
+      class="btn btn-danger"
+      style="display: none"
+    >
+      Batch Delete <i class="fas fa-trash ml-2"></i>
+    </button>
+    <button class="btn btn-primary" id="export-entries">
+      Export Today's Log
+    </button>
+  </form>
 </div>
-<div class="table-reponsive mt-3">
-  <table id="table" class="table table-striped table-bordered">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Course</th>
-        <th>Time In</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for entry in entries%}
-      <tr>
-        <td>{{ entry.id}}</td>
-        <td>{{ entry.user.username}}</td>
-        <td>{{ entry.user.first_name}}</td>
-        <td>{{ entry.user.last_name}}</td>
-        <td>{{ entry.user.course}}</td>
-        <td>{{ entry.created.strftime('%D %I:M %p') }}</td>
-        <td class="delete" data-id="{{entry.id}}">
-          <button type="button" class="btn btn-sm btn-danger">Delete</button>
-        </td>
-      </tr>
+<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link active"
+      id="home-tab"
+      data-toggle="tab"
+      data-target="#home"
+      type="button"
+      role="tab"
+      aria-controls="home"
+      aria-selected="true"
+    >
+      Student Logs
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="profile-tab"
+      data-toggle="tab"
+      data-target="#profile"
+      type="button"
+      role="tab"
+      aria-controls="profile"
+      aria-selected="false"
+    >
+      Student Violations
+    </button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div
+    class="tab-pane fade show active"
+    id="home"
+    role="tabpanel"
+    aria-labelledby="home-tab"
+  >
+    <div class="table-reponsive mt-3">
+      <form
+        method="POST"
+        action="{{ url_for('entries.batch')}}"
+        id="table-batch"
+      >
+        <table id="table" class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="parent-checkbox" /></th>
+              <th>Student ID</th>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Course</th>
+              <th>Time In</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in entries%}
+            <tr>
+              <td>
+                <input
+                  type="checkbox"
+                  class="child-checkbox"
+                  name="ids[]"
+                  value="{{ entry.id }}"
+                  data-id="{{ entry.id }}"
+                />
+              </td>
+              <td>{{ entry.user.student_id }}</td>
+              <td>{{ entry.user.first_name}}</td>
+              <td>{{ entry.user.last_name}}</td>
+              <td>{{ entry.user.course}}</td>
+              <td>{{ entry.created.strftime('%D %I:%M %p') }}</td>
+              <td class="delete-log" data-id="{{entry.id}}">
+                <button type="button" class="btn btn-sm btn-danger">
+                  Delete
+                </button>
+              </td>
+            </tr>
 
-      {% endfor%}
-    </tbody>
-  </table>
+            {% endfor%}
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+  <div
+    class="tab-pane fade"
+    id="profile"
+    role="tabpanel"
+    aria-labelledby="profile-tab"
+  >
+    <div class="table-reponsive mt-3">
+      <form
+        method="POST"
+        action="{{ url_for('entries.batch')}}"
+        id="table-batch"
+      >
+        <table id="table" class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Violation Type</th>
+           
+              <th>Time Detected</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in violations%}
+            <tr>
+              <td>{{ entry.user.username }}</td>
+              <td>{{ entry.created.strftime('%D %I:%M %p') }}</td>
+              <td class="delete" data-id="{{entry.id}}">
+                <button type="button" class="btn btn-sm btn-danger">
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+            {% endfor%}
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
 </div>
+
+{% endblock %} {% block modals %}
+<div class="modal fade" id="delete-log" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <form id="form-delete" method="POST">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Log</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <p>Are you sure you want to delete this log?.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="batch-delete-log" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Batch Delete Log</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Are you sure you want to delete the selected logs?.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="batch-yes" class="btn btn-primary">
+          Yes
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+  var dataTable = new DataTable('#table');
+  $('input[type=checkbox]').on('change', function () {
+    $countCheck = $('.child-checkbox:checked').length;
+    if ($countCheck > 0) {
+      $('#batch-delete-btn').show();
+    } else {
+      $('#batch-delete-btn').hide();
+    }
+  });
+
+  $('.delete-log').on('click', function () {
+    $id = $(this).data('id');
+    $modal = $('#delete-log');
+    $('#form-delete').attr('action', `http://localhost:5000/entries/${$id}/delete`);
+    $modal.modal('show');
+  });
+
+  $('#batch-delete-btn').on('click', function () {
+    $('#batch-delete-log').modal({ show: true });
+  });
+  $('#batch-yes').on('click', function () {
+    $('#table-batch').submit();
+  });
+</script>
 
 {% endblock %}

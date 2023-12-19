@@ -12,20 +12,29 @@ from sqlalchemy import any_
 bp = Blueprint('users', __name__, url_prefix='/users')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
+courses = [
+    'Bachelor of Science in Information Technology(BSIT)',
+    'Bachelor of Science in Entrepreneurship(BSEntrep)',
+    'Bachelor of Science in Fisheries (BSFi)',
+    'The Bachelor in Technical-Vocational Teacher Education (BTVTEd)'
+]
+
 
 @bp.route('', methods=('GET', 'POST'))
 @login_required
 def index():
+    
     users = User.query.filter(
-            User.student_id != '00000-001'
-        ).filter(
-            User.student_id != '00000-002'
+        User.student_id != '00000-001'
+    ).filter(
+        User.student_id != '00000-002'
 
-        ).filter(
-            User.student_id != '00000-003'
-        ).all()
+    ).filter(
+        User.student_id != '00000-003'
+    ).all()
 
     return render_template('users/users-index.html', users=users)
+
 
 @bp.route('create', methods=['GET', 'POST'])
 @login_required
@@ -54,7 +63,7 @@ def users_create():
         db.session.commit()
         return redirect(url_for("users.index"))
 
-    return render_template('users/user-create.html')
+    return render_template('users/user-create.html', courses=courses)
 
 
 @bp.route('<id>/edit', methods=['GET', 'POST'])
@@ -86,16 +95,33 @@ def edit(id):
 
         return redirect(url_for("users.index"))
 
-    return render_template('users/user-edit.html', user=user)
+    return render_template('users/user-edit.html', user=user, courses=courses)
 
 
 @bp.route('<id>', methods=['POST'])
 def delete(id):
-    entry = User.query.get_or_404(id)
+    user = User.query.get_or_404(id)
     try:
-        db.session.delete(entry)
+        db.session.delete(user)
         db.session.commit()
         return redirect(url_for("users.index"))
     except:
         flash("Something went wrong!")
     return redirect(url_for("users.index"))
+
+
+@bp.route('delete/batch', methods=['POST'])
+@login_required
+def batch():
+  
+    ids = request.form.getlist('ids[]')
+    print(ids)
+    for id in ids:
+        user = User.query.get_or_404(id)
+        try:
+            db.session.delete(user)
+            db.session.commit()
+        except:
+            flash("Something went wrong!")
+    return redirect(url_for("users.index"))
+    

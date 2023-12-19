@@ -7,7 +7,7 @@
 <div class="d-flex justify-content-between align-items-center">
   <h2>Edit Student</h2>
 </div>
-<form class="container mt-3 px-0" method="post" enctype="multipart/form-data">
+<form id="form-update-student" class="container mt-3 px-0" method="post" enctype="multipart/form-data">
   <div class="card border-1">
     <div class="card-body">
       {% for message in get_flashed_messages() %}
@@ -57,15 +57,11 @@
           </div>
           <div class="form-group">
             <label for="course">Course</label>
-            <input
-              type="text"
-              class="form-control"
-              id="course"
-              name="course"
-              placeholder="Enter course"
-              required
-              value="{{ user.course }}"
-            />
+            <select name="course" id="course" class="form-control" required>
+              {% for course in courses %}
+                <option value="{{ course }}" {% if user.course == course %} selected {% endif %}>{{ course }}</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="form-group">
             <label for="year_level">Year Level {{ user.year_level}}</label>
@@ -110,9 +106,56 @@
       </div>
     </div>
     <div class="card-footer">
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="button" class="btn btn-primary" id="update-user-btn">Submit</button>
     </div>
   </div>
 </form>
 
 {% endblock %}
+{% block modals %}
+<div class="modal fade" id="update-user" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Student</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Are you sure you want to update this student info?.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="update-yes" class="btn btn-primary">
+          Yes
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} 
+{% block scripts %}
+<script>
+  $('#update-user-btn').on('click', function () {
+    $modal = $('#update-user');
+    $modal.modal('show');
+  });
+  $('#update-yes').on('click', function () {
+    $('#form-update-student').submit();
+  });
+</script>
+
+{% endblock %}
+
+
+
+

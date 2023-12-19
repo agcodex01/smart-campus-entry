@@ -3,62 +3,160 @@
 {% endblock %} {% block content %}
 <div class="d-flex justify-content-between align-items-center">
   <h2>Students</h2>
-  <a class="btn btn-primary" href="{{ url_for('users.users_create') }}"
-    >Add Student <i class="fas fa-plus ml-2"></i>
-  </a>
+  <div>
+    <button id="batch-delete-btn" class="btn btn-danger" style="display: none">
+      Batch Delete <i class="fas fa-trash ml-2"></i>
+    </button>
+    <a class="btn btn-primary" href="{{ url_for('users.users_create') }}"
+      >Add Student <i class="fas fa-plus ml-2"></i>
+    </a>
+  </div>
 </div>
 
 <hr />
-<div class="row">
-  {% for user in users %}
-  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-    <div class="card rounded-0 p-0 shadow-sm mb-3">
-      <img
-        src="{{ url_for('static', filename='profiles/' + user['student_id'] + '.png') }}"
-        width="200px"
-        height="200px"
-        class="rounded-0 mx-auto mt-3"
-        alt="Angular pro sidebar"
-      />
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <div>
-            <h6 class="card-title">
-              {{ user['first_name']}} {{ user['last_name']}}
-              <span class="badge badge-pill badge-info">
-                {{ user['course']}} - {{ user['year_level']}}
-              </span>
-            </h6>
-            <p>ID: {{ user['student_id']}}</p>
-          </div>
 
-          <div>
-            <i
-              class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"
-              data-toggle="dropdown"
-            ></i>
-            <div class="dropdown-menu">
-              <a
-                href="{{ url_for('users.edit', id=user.id)}}"
-                class="dropdown-item"
-                >Edit</a
-              >
-              <a
-                data-id="{{ user.id}}"
-                data-firstname="{{ user.first_name}}"
-                data-lastname="{{ user.last_name}}"
-                href="#"
-                class="dropdown-item delete-user"
-                >Delete</a
-              >
-            </div>
-          </div>
+<div class="table-reponsive mt-3">
+  <form id="table-batch" method="POST" action="{{ url_for('users.batch')}}">
+    <table id="table" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="parent-checkbox" /></th>
+          <th>Student ID</th>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Course</th>
+          <th>Year Level</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users%}
+        <tr>
+          <td>
+            <input
+              type="checkbox"
+              class="child-checkbox"
+              name="ids[]"
+              value="{{ user.id }}"
+              data-id="{{ user.id }}"
+            />
+          </td>
+          <td class="align-middle">
+            <img
+              src="{{url_for('static', filename='profiles/' + user.student_id + '.png')}}"
+              class="rounded-circle bordered"
+              alt="profile"
+              width="40px"
+              height="40px"
+            />
+            <a href="{{ url_for('users.edit', id=user.id)}}"
+              >{{ user.student_id }}</a
+            >
+          </td>
+          <td class="align-middle">{{ user.first_name}}</td>
+          <td class="align-middle">{{ user.last_name}}</td>
+          <td class="align-middle">{{ user.course}}</td>
+          <td class="align-middle">{{ user.year_level}}</td>
+          <td class="delete-user align-middle" data-id="{{user.id}}">
+            <button type="button" class="btn btn-sm btn-danger">Delete</button>
+          </td>
+        </tr>
+
+        {% endfor%}
+      </tbody>
+    </table>
+  </form>
+</div>
+{% endblock %} {% block modals %}
+<div class="modal fade" id="delete-user" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <form id="form-delete" method="POST">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Student</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body text-center">
+          <p>Are you sure you want to delete this student?.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="batch-delete-user" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Batch Delete Student</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Are you sure you want to delete the selected students?.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="batch-yes" class="btn btn-primary">
+          Yes
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancel
+        </button>
       </div>
     </div>
   </div>
-  {%endfor%}
 </div>
-{% endblock %}
 
-<!-- page-content" -->
+{% endblock %} {% block scripts %}
+<script>
+  var dataTable = new DataTable('#table');
+  $('input[type=checkbox]').on('change', function () {
+    $countCheck = $('.child-checkbox:checked').length;
+    if ($countCheck > 0) {
+      $('#batch-delete-btn').show();
+    } else {
+      $('#batch-delete-btn').hide();
+    }
+  });
+  $('.delete').on('click', function () {
+    fetch(`/entries/${$(this).data('id')}`, {
+      method: 'DELETE',
+    }).then(() => {
+      dataTable.row($(this)).remove().draw();
+    });
+  });
+
+  $('.delete-user').on('click', function () {
+    $id = $(this).data('id');
+    $modal = $('#delete-user');
+    $('#form-delete').attr('action', `http://localhost:5000/users/${$id}`);
+    $modal.modal('show');
+  });
+  $('#batch-delete-btn').on('click', function () {
+    $('#batch-delete-user').modal({ show: true });
+  });
+  $('#batch-yes').on('click', function () {
+    $('#table-batch').submit();
+  });
+</script>
+
+{% endblock %}

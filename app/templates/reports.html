@@ -1,0 +1,69 @@
+{% extends 'base.html' %} {% block navbaritems %}
+<li class="breadcrumb-item active" aria-current="page">Reports</li>
+{% endblock %} {% block content %}
+<div class="d-flex justify-content-between align-items-center">
+  <h2>Reports</h2>
+</div>
+<div class="table-reponsive mt-3">
+  <table id="table" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th data-sortable="false">File</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for report in reports %}
+      <tr>
+        <td>{{ report }}</td>
+        <td>
+          <a href={{ url_for('static', filename='reports/' + report) }} class="btn btn-sm btn-info" download>Download</a>
+        </td>
+      </tr>
+
+      {% endfor%}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    
+    $(document).ready(function() {
+        var dataTable = new DataTable('#table', {
+            sorting: false,
+            'columnDefs': [ {
+
+                'targets': [0], /* column index */
+            
+                'orderable': false, /* true or false */
+            
+             }]
+        });
+    })
+    $('input[type=checkbox]').on('change', function () {
+      $countCheck = $('.child-checkbox:checked').length;
+      if ($countCheck > 0) {
+        $('#batch-delete-btn').show();
+      } else {
+        $('#batch-delete-btn').hide();
+      }
+    });
+  
+    $('.delete-log').on('click', function () {
+      $id = $(this).data('id');
+      $modal = $('#delete-log');
+      $('#form-delete').attr('action', `http://localhost:5000/entries/${$id}/delete`);
+      $modal.modal('show');
+    });
+  
+    $('#batch-delete-btn').on('click', function () {
+      $('#batch-delete-log').modal({ show: true });
+    });
+    $('#batch-yes').on('click', function () {
+      $('#table-batch').submit();
+    });
+  </script>
+{% endblock%}

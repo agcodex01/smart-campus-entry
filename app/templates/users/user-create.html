@@ -54,14 +54,11 @@
           </div>
           <div class="form-group">
             <label for="course">Course</label>
-            <input
-              type="text"
-              class="form-control"
-              id="course"
-              name="course"
-              placeholder="Enter course"
-              required
-            />
+            <select name="course" id="course" class="form-control" required>
+              {% for course in courses %}
+                <option value="{{ course }}">{{ course }}</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="form-group">
             <label for="year_level">Year Level</label>

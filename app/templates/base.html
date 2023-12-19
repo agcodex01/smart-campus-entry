@@ -20,6 +20,11 @@
 
     <link
       rel="stylesheet"
+      href="{{ url_for('static', filename='css/datatableselect.min.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
       href="{{ url_for('static', filename='css/fontawesome.min.css') }}"
     />
     <link
@@ -89,6 +94,12 @@
                   <span>Logs</span>
                 </a>
               </li>
+              <li>
+                <a href="{{ url_for('reports.index') }}">
+                  <i class="fa fa-calendar"></i>
+                  <span>Reports</span>
+                </a>
+              </li>
             </ul>
           </div>
           <!-- sidebar-menu  -->
@@ -130,38 +141,7 @@
     </div>
     <!-- page-wrapper -->
 
-    <div class="modal fade" id="delete-user" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <form id="form-delete" method="POST">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Delete Student</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body text-center">
-              <p>Are you sure you want to delete this student?.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-danger">Delete</button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+    {% block modals %}{% endblock %}
 
     <script src="{{ url_for('static', filename='js/jquery.slim.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
@@ -170,24 +150,29 @@
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dataTable.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}"></script>
-    {% block scripts %}{% endblock %}
-    <script>
-      var dataTable = new DataTable('#table');
+    <script src="{{ url_for('static', filename='js/dataTables.checkboxes.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTableSelect.min.js') }}"></script>
 
-      $('.delete').on('click', function () {
-        fetch(`/entries/${$(this).data('id')}`, {
-          method: 'DELETE',
-        }).then(() => {
-          dataTable.row($(this)).remove().draw();
+
+    <script>
+      $('#parent-checkbox').on('change', function () {
+        $selectAll = $(this)[0].checked;
+        $('.child-checkbox').each(function () {
+          $(this).prop('checked', $selectAll);
         });
       });
 
-      $('.delete-user').on('click', function () {
-        $id = $(this).data('id');
-        $modal = $('#delete-user');
-        $('#form-delete').attr('action', `http://localhost:5000/users/${$id}`);
-        $modal.modal('show');
+      $('.child-checkbox').on('change', function () {
+        $countChildCheckbox = $('.child-checkbox').length;
+        $countCheck = $('.child-checkbox:checked').length;
+
+        $('#parent-checkbox').prop(
+          'checked',
+          $countCheck == $countChildCheckbox
+        );
       });
     </script>
+
+    {% block scripts %}{% endblock %}
   </body>
 </html>

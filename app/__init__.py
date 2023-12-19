@@ -14,12 +14,13 @@ app.config['UPLOAD_FOLDER'] = '/profiles'
 socketio = SocketIO(app, cors_allowed_origins="*")
 db = SQLAlchemy(app)
 
-from app import landing, entries, auth, users
+from app import landing, entries, auth, users, reports
 
 app.register_blueprint(landing.bp)
 app.register_blueprint(entries.bp)
 app.register_blueprint(auth.bp)
 app.register_blueprint(users.bp)
+app.register_blueprint(reports.bp)
 
 with app.app_context():
     db.create_all()
