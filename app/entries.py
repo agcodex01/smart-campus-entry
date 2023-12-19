@@ -65,25 +65,25 @@ def export():
     sheet['E1'] = 'Year Level'
     sheet['F1'] = 'Time In'
 
-    row = 2
+    rowIndex = 2
     for entry in entries:
-        sheet['A' + str(row)] = entry.user.student_id
-        sheet['B' + str(row)] = entry.user.first_name
-        sheet['C' + str(row)] = entry.user.last_name
-        sheet['D' + str(row)] = entry.user.course
-        sheet['E' + str(row)] = entry.user.year_level
-        sheet['F' + str(row)] = entry.created
-        row += 1
+        sheet['A' + str(rowIndex)] = entry.user.student_id
+        sheet['B' + str(rowIndex)] = entry.user.first_name
+        sheet['C' + str(rowIndex)] = entry.user.last_name
+        sheet['D' + str(rowIndex)] = entry.user.course
+        sheet['E' + str(rowIndex)] = entry.user.year_level
+        sheet['F' + str(rowIndex)] = entry.created
+        rowIndex += 1
         
     violation_sheet = workbook.create_sheet('Student Violations')
     violation_sheet['A1'] = 'Violation Type'
     violation_sheet['B1'] = 'Time Detected'
     
-    row = 2
+    rowIndex = 2
     for violation in violations:
-        violation_sheet['A' + str(row)] = violation.user.username
-        violation_sheet['B' + str(row)] = violation.created
-        row += 1
+        violation_sheet['A' + str(rowIndex)] = violation.user.username
+        violation_sheet['B' + str(rowIndex)] = violation.created
+        rowIndex += 1
     
     basedir = os.path.abspath(os.path.dirname(__file__))
     path = os.path.join(basedir, 'static/reports',
