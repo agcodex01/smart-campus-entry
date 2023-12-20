@@ -1,0 +1,86 @@
+{% extends 'base.html' %} {% block navbaritems %}
+<li class="breadcrumb-item active" aria-current="page">Report a Student</li>
+{% endblock %} {% block content %}
+<div class="d-flex justify-content-between align-items-center">
+  <h2>Violations</h2>
+</div>
+
+<div class="table-reponsive mt-3">
+  <table id="table" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Student ID</th>
+        <th>Violation Type</th>
+        <th>Other</th>
+        <th>Time Detected</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in violations%}
+
+      <tr>
+        <form
+          method="POST"
+          action="{{ url_for('entries.submit')}}"
+          id="v-{{entry.id}}"
+        >
+          <input
+            type="hidden"
+            class="form-control"
+            name="id"
+            value="{{entry.id}}"
+          />
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              name="student_id"
+              required
+            />
+          </td>
+          <td>{{ entry.user.username }}</td>
+          <td><input type="text" class="form-control" name="other" /></td>
+          <td>{{ entry.created.strftime('%D %I:%M %p') }}</td>
+          <td>
+            <button type="submit" class="btn btn-sm btn-primary">Report</button>
+          </td>
+        </form>
+      </tr>
+
+      {% endfor%}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+  var dataTable = new DataTable('#table');
+  $('input[type=checkbox]').on('change', function () {
+    $countCheck = $('.child-checkbox:checked').length;
+    if ($countCheck > 0) {
+      $('#batch-delete-btn').show();
+    } else {
+      $('#batch-delete-btn').hide();
+    }
+  });
+
+  $('.delete-log').on('click', function () {
+    $id = $(this).data('id');
+    $modal = $('#delete-log');
+    $('#form-delete').attr(
+      'action',
+      `http://localhost:5000/entries/${$id}/delete`
+    );
+    $modal.modal('show');
+  });
+
+  $('#batch-delete-btn').on('click', function () {
+    $('#batch-delete-log').modal({ show: true });
+  });
+  $('#batch-yes').on('click', function () {
+    $('#table-batch').submit();
+  });
+</script>
+
+{% endblock %}

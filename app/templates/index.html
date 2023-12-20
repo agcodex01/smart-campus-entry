@@ -39,7 +39,7 @@
                 <div class="card-body px-0 py-1">
                   <small class="card-title"
                     >{{ entry.user.first_name }} {{ entry.user.last_name }}
-                    <span class="badge badge-pill badge-info">
+                    <span class="badge badge-pill badge-info w-100 text-wrap">
                       {{ entry.user.course }} - {{ entry.user.year_level }}
                     </span></small
                   >
@@ -112,11 +112,14 @@
             <div class="card-body px-0 py-1">
               <small class="card-title"
                 >${entry.user.first_name} ${entry.user.last_name}
-                <span class="badge badge-pill badge-info">
+                <span class="badge badge-pill badge-info w-100 text-wrap">
                   ${entry.user.course} - ${entry.user.year_level}
                 </span></small
               >
               <small class="">${entry.user.student_id}</small>
+            </div>
+            <div class="card-footer">
+              ${ entry.time }
             </div>
           </div>
         </div>

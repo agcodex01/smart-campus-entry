@@ -100,6 +100,18 @@
                   <span>Reports</span>
                 </a>
               </li>
+              <li>
+                <a href="{{ url_for('entries.submit') }}">
+                  <i class="fa fa-calendar"></i>
+                  <span>Report a Student</span>
+                </a>
+              </li>
+              <li>
+                <a href="/">
+                  <i class="fa fa-calendar"></i>
+                  <span>Go To Landing Page</span>
+                </a>
+              </li>
             </ul>
           </div>
           <!-- sidebar-menu  -->
@@ -152,6 +164,7 @@
     <script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dataTables.checkboxes.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dataTableSelect.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTables.editor.min.js') }}"></script>
 
 
     <script>

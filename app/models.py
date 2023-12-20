@@ -31,6 +31,9 @@ class User(db.Model):
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    violations = db.Column(db.String(50), nullable=True)
+    reported = db.Column(db.Boolean, default=False)
+    other = db.Column(db.String(50), nullable=True)
     created = db.Column(db.DateTime, default=datetime.now())
 
     def __repr__(self):
