@@ -3,7 +3,7 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from sqlalchemy import asc, desc, delete, func
+from sqlalchemy import asc, desc, delete, func, update
 from app import db
 from app.models import Entry, User
 from app.auth import login_required
@@ -27,7 +27,7 @@ def index():
         ~Entry.user_id.in_([3, 4])
     ).filter(
         Entry.reported == 1
-    ).all()
+    ).order_by(Entry.created.desc()).all()
 
     return render_template('entries.html', entries=entries, violations=violations)
 
@@ -132,28 +132,26 @@ def submit():
     if request.method == 'POST':
         id = request.form['id']
         student_id = request.form['student_id']
-        other = request.form['other']
         
-        entry = Entry.query.first_or_404(id)
+        entry = Entry.query.filter(Entry.id == id).first()
         
         user_id = User.query.filter(
                         User.student_id == student_id).first().id
         if user_id == None:
             return redirect(url_for("entries.submit"))
-        
+
         log = Entry(
             user_id=user_id,
             created= datetime.now(),
             reported=1,
-            other=other,
             violations=entry.user.username
         )
        
+        entry.reported = True
         db.session.add(log)
+       
         db.session.commit()
-        
-        entry.reported = 1
-        db.session.commit()
+    
         
         return redirect(url_for("entries.submit"))
         

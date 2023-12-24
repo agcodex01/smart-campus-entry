@@ -117,13 +117,13 @@
         <table id="table" class="table table-striped table-bordered">
           <thead>
             <tr>
+              <th><input type="checkbox" id="parent-checkbox" /></th>
               <th>Student ID</th>
               <th>Firstname</th>
               <th>Lastname</th>
               <th>Course</th>
               <th>Year Level</th>
               <th>Violation Type</th>
-              <th>Other</th>
               <th>Time Detected</th>
               <th>Action</th>
             </tr>
@@ -131,13 +131,21 @@
           <tbody>
             {% for entry in violations%}
             <tr>
+              <td>
+                <input
+                  type="checkbox"
+                  class="child-checkbox"
+                  name="ids[]"
+                  value="{{ entry.id }}"
+                  data-id="{{ entry.id }}"
+                />
+              </td>
               <td>{{ entry.user.student_id }}</td>
               <td>{{ entry.user.first_name}}</td>
               <td>{{ entry.user.last_name}}</td>
               <td>{{ entry.user.course}}</td>
               <td>{{ entry.user.year_level}}</td>
               <td>{{ entry.violations }}</td>
-              <td>{{ entry.other }}</td>
               <td>{{ entry.created.strftime('%D %I:%M %p') }}</td>
               <td class="delete" data-id="{{entry.id}}">
                 <button type="button" class="btn btn-sm btn-danger">
@@ -216,7 +224,7 @@
 {% endblock %} {% block scripts %}
 <script>
   
-  var dataTable = $('#table').DataTable();
+  var dataTable = $('.table').DataTable();
   $('input[type=checkbox]').on('change', function () {
     $countCheck = $('.child-checkbox:checked').length;
     if ($countCheck > 0) {
@@ -224,9 +232,6 @@
     } else {
       $('#batch-delete-btn').hide();
     }
-  });
-  $('#table').on('click', 'tbody td', function () {
-    editor.cell(this).edit();
   });
 
   $('.delete-log').on('click', function () {

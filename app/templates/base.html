@@ -169,6 +169,7 @@
 
     <script>
       $('#parent-checkbox').on('change', function () {
+        console.log(this)
         $selectAll = $(this)[0].checked;
         $('.child-checkbox').each(function () {
           $(this).prop('checked', $selectAll);

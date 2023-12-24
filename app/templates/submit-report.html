@@ -11,7 +11,6 @@
       <tr>
         <th>Student ID</th>
         <th>Violation Type</th>
-        <th>Other</th>
         <th>Time Detected</th>
         <th>Action</th>
       </tr>
@@ -40,7 +39,6 @@
             />
           </td>
           <td>{{ entry.user.username }}</td>
-          <td><input type="text" class="form-control" name="other" /></td>
           <td>{{ entry.created.strftime('%D %I:%M %p') }}</td>
           <td>
             <button type="submit" class="btn btn-sm btn-primary">Report</button>
