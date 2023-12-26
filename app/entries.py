@@ -108,7 +108,14 @@ def export():
     path = os.path.join(basedir, 'static/reports',
                         datetime.now().strftime('%d-%b-%Y-%I-%M-%p-%S%f') + '.xlsx')
     workbook.save(filename=path)
-
+    
+    if (len(entries) + len(violations)) > 0:
+        
+        for e in  [*entries, *violations]:
+            db.session.delete(e)
+        
+        db.session.commit()
+         
     return redirect(url_for('reports.index'))
 
 
@@ -159,5 +166,5 @@ def submit():
         Entry.user_id.in_([3, 4])
     ).filter(
         Entry.reported == 0
-    ).all()
+    ).order_by(Entry.created.desc()).all()
     return render_template('submit-report.html', violations=violations)

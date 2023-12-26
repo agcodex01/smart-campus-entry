@@ -17,11 +17,26 @@ bp = Blueprint('reports', __name__, url_prefix='/reports')
 @bp.route('', methods=['GET', 'POST'])
 @login_required
 def index():
-    reports = []
     basedir = os.path.abspath(os.path.dirname(__file__))
     dir = os.path.join(basedir, 'static/reports')
-
+    
+    if request.method == 'POST':
+        names = request.form.getlist('names[]')
+        for name in names:
+            os.remove(dir + "/" + name)
+        return redirect(url_for('reports.index'))
+    
+    reports = []
     for file in os.listdir(dir):
         reports.append(file)
         
     return render_template('reports.html', reports=sorted(reports, reverse=True))
+
+@bp.route('<name>/delete', methods=['POST'])
+def delete(name):
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    dir = os.path.join(basedir, 'static/reports')
+    
+    os.remove(dir + "/" + name)
+
+    return redirect(url_for('reports.index'))
